@@ -4,6 +4,7 @@
 #include <SFML/Audio.hpp>
 #include <string>
 #include <vector>
+#include <stdio.h>
 
 sf::RenderWindow win;
 
@@ -31,6 +32,14 @@ int bulposy;
 int oldx;
 int oldy;
 
+int tms = 0;
+bool aaa = 0;
+
+int tmsi=0;
+bool frst = 0;
+int xdiff;
+            int ydiff;
+
 class Фрейм
 {
     public:
@@ -39,32 +48,110 @@ class Фрейм
         sf::Texture tex;
         sf::RectangleShape spr;
         int x = 0, y = 0;
+        bool ded = false;
 } ;
 std::vector<Фрейм> фреймы;
 
 
+std::vector<Фрейм> players;
 
 void Logic()
 {
-    Hp.setString(std::to_string(фреймы[фрейм].hp));
-    if (bulposx > oldx)
+    if (dec != 1)
     {
-        oldx+=1;
+        Hp.setString(std::to_string(фреймы[фрейм].hp));
+        
+        if (frst == true && aaa == false)
+        {
+            if (bulposx > oldx) { xdiff = bulposx-oldx; }
+            else if (bulposx < oldx) { xdiff = oldx-bulposx; }
+            else if (bulposx == oldx) { xdiff = 0; }
+            
+            if (bulposy > oldy) { ydiff = bulposy-oldy; }
+            else if (bulposy < oldy) { ydiff = oldy-bulposy; }
+            else if (bulposy == oldy) { ydiff = 0 ;}
+            
+            if (xdiff > ydiff)
+            {
+                tms = xdiff/ydiff;
+                aaa = true;
+            }
+            else if (xdiff < ydiff)
+            {
+                tms = ydiff/xdiff;
+                aaa = true;
+            }
+            else if (xdiff == ydiff)
+            {
+                tms = 0;
+                aaa = false;
+                frst = true;
+            }
+        }
+        
+        if (aaa == true && tms <= tmsi)
+        {
+            if (ydiff > xdiff) // x
+            {
+                if (oldx > bulposx)
+                {
+                    oldx-=1;
+                }
+                else if (oldx < bulposx)
+                {
+                    oldx+=1;
+                }
+            }
+            else if (ydiff < xdiff)
+            {
+                if (oldy > bulposy)
+                {
+                    oldy-=1;
+                }
+                else if (oldy < bulposy)
+                {
+                    oldy+=1;
+                }
+            }
+            tmsi = 0;
+        }
+        
+        if (aaa == true)
+        {
+            if (ydiff > xdiff) // y
+            { 
+                if (oldy > bulposy)
+                {
+                    oldy-=1;
+                }
+                else if (oldy < bulposy)
+                {
+                    oldy+=1;
+                }
+            }
+            else if (ydiff < xdiff)
+            {
+                if (oldx > bulposx)
+                {
+                    oldx-=1;
+                }
+                else if (oldx < bulposx)
+                {
+                    oldx+=1;
+                }
+            }
+        }
+        
+        if (oldx >= players[1].x && oldx <= players[1].x+100 && oldy >= players[1].y && oldy <= players[1].y+300 && players[1].ded != true)
+        {
+            players[1].ded = true;
+            aaa = false; frst = false; tms = 0; tmsi = 0;
+        }
+        
+        
+        if (aaa == true && oldx == bulposx && oldy == bulposy) { aaa = false; frst = false; tms = 0; tmsi = 0; }
+        if (aaa == true) { tmsi+=1; }
     }
-    else if (bulposx < oldx)
-    {
-        oldx-=1;
-    }
-    else if (bulposy > oldy)
-    {
-        oldy+=1;
-    }
-    else if (bulposy < oldy)
-    {
-        oldy-=1;
-    }
-    /*if (oldx == oldx) {}
-    if (bulposy == oldy) {}*/
 }
 void Controls()
 {
@@ -76,7 +163,32 @@ void Controls()
             bool yas = false;
             for (int i=0; i<6; i++)
             {
-                if (mpos.x >= 200*i && mpos.x <= 200*i+200 && mpos.y >= 100 && mpos.y <= 400) { фрейм = i; yas = true; break; }
+                if (mpos.x >= 200*i && mpos.x <= 200*i+200 && mpos.y >= 100 && mpos.y <= 400)
+                {
+                    players.resize(2);
+                    
+                    players[0].name = фреймы[i].name;
+                    players[0].hp = фреймы[i].hp;
+                    players[0].spr = фреймы[i].spr;
+                    players[0].tex = фреймы[i].tex;
+                    players[0].x =0;
+                    players[0].y = 0;
+                    
+                    players[1].name = фреймы[5].name;
+                    players[1].hp = фреймы[5].hp;
+                    players[1].spr = фреймы[5].spr;
+                    players[1].tex = фреймы[5].tex;
+                    players[1].x = 400;
+                    players[1].y = 200;
+                    
+                    players[0].spr.setTexture(&players[0].tex);
+                    
+                    players[1].spr.setTexture(&players[1].tex);
+                    
+                    фрейм = i;
+                    yas = true;
+                    break;
+                }
             }
             if (yas == true)
             {
@@ -90,19 +202,19 @@ void Controls()
         {*/
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
             {
-                фреймы[фрейм].y = фреймы[фрейм].y-1;
+                players[0].y-=1;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
             {
-                фреймы[фрейм].y = фреймы[фрейм].y+1;
+                players[0].y+=1;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
             {
-                фреймы[фрейм].x = фреймы[фрейм].x-1;
+                players[0].x-=1;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
             {
-                фреймы[фрейм].x = фреймы[фрейм].x+1;
+                players[0].x+=1;
             }
         /*}
         else
@@ -140,8 +252,9 @@ void Controls()
             sf::Vector2i mpos = sf::Mouse::getPosition(win);
             bulposx = mpos.x;
             bulposy = mpos.y;
-            oldx = фреймы[фрейм].x;
-            oldy = фреймы[фрейм].y;
+            oldx = players[0].x;
+            oldy = players[0].y;
+            frst = true;
         }
     }
 }
@@ -162,9 +275,26 @@ void Draw()
     }
     else
     {
-        if (oldx != bulposx && oldy != bulposy) { bul.setPosition(oldx, oldy); win.draw(bul); }
-        фреймы[фрейм].spr.setPosition (фреймы[фрейм].x, фреймы[фрейм].y);
-        win.draw(фреймы[фрейм].spr);
+        if (aaa == true) { float xxxx = oldx; float yyyy = oldy; bul.setPosition(xxxx, yyyy); win.draw(bul); }
+        
+        int plsz = players.size();
+        /*for (int j=0; j<plsz-1; plsz++)
+        {
+            players[j].spr.setPosition (players[j].x, players[j].y);
+            win.draw(players[j].spr);
+        }*/
+        
+        if (players[0].ded != true)
+        {
+        players[0].spr.setPosition (players[0].x, players[0].y);
+        win.draw(players[0].spr);
+        }
+        if (players[1].ded != true)
+        {
+        players[1].spr.setPosition (players[1].x, players[1].y);
+        win.draw(players[1].spr);
+        }
+        
         win.draw(Hp);
     }
 	win.display();
