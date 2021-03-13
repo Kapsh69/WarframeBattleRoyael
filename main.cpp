@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <stdio.h>
+#include <iostream>
 
 sf::RenderWindow win;
 
@@ -24,7 +25,7 @@ bool warframe = 0;
 
 bool dec = 1;
 
-int фрейм;
+int frame;
 
 int bulposx;
 int bulposy;
@@ -38,9 +39,14 @@ bool aaa = 0;
 int tmsi=0;
 bool frst = 0;
 int xdiff;
-            int ydiff;
+int ydiff;
 
-class Фрейм
+int win_width = 1280;
+int win_height = 720;
+int sc_width;
+int sc_height;
+
+class Frame
 {
     public:
         std::string name;
@@ -50,16 +56,16 @@ class Фрейм
         int x = 0, y = 0;
         bool ded = false;
 } ;
-std::vector<Фрейм> фреймы;
+std::vector<Frame> frames;
 
 
-std::vector<Фрейм> players;
+std::vector<Frame> players;
 
 void Logic()
 {
     if (dec != 1)
     {
-        Hp.setString(std::to_string(фреймы[фрейм].hp));
+        Hp.setString(std::to_string(frames[frame].hp));
         
         if (frst == true && aaa == false)
         {
@@ -167,17 +173,17 @@ void Controls()
                 {
                     players.resize(2);
                     
-                    players[0].name = фреймы[i].name;
-                    players[0].hp = фреймы[i].hp;
-                    players[0].spr = фреймы[i].spr;
-                    players[0].tex = фреймы[i].tex;
+                    players[0].name = frames[i].name;
+                    players[0].hp = frames[i].hp;
+                    players[0].spr = frames[i].spr;
+                    players[0].tex = frames[i].tex;
                     players[0].x =0;
                     players[0].y = 0;
                     
-                    players[1].name = фреймы[5].name;
-                    players[1].hp = фреймы[5].hp;
-                    players[1].spr = фреймы[5].spr;
-                    players[1].tex = фреймы[5].tex;
+                    players[1].name = frames[5].name;
+                    players[1].hp = frames[5].hp;
+                    players[1].spr = frames[5].spr;
+                    players[1].tex = frames[5].tex;
                     players[1].x = 400;
                     players[1].y = 200;
                     
@@ -185,7 +191,7 @@ void Controls()
                     
                     players[1].spr.setTexture(&players[1].tex);
                     
-                    фрейм = i;
+                    frame = i;
                     yas = true;
                     break;
                 }
@@ -198,51 +204,41 @@ void Controls()
     }
     else
     {
-        /*if (warframe == 0)
-        {*/
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            {
-                players[0].y-=1;
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            {
-                players[0].y+=1;
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            {
-                players[0].x-=1;
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            {
-                players[0].x+=1;
-            }
-        /*}
-        else
+        // Arrows
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
         {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            {
-                by = by-1;
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            {
-                by = by+1;
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            {
-                bx = bx-1;
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            {
-                bx = bx+1;
-            }
-        }*/
-
-        /*if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+            players[0].y-=1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
         {
-            if (warframe == 0) { warframe = 1; }
-            else if (warframe == 1) { warframe = 0; }
-        }*/
-        //if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            players[0].y+=1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+        {
+            players[0].x-=1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+        {
+            players[0].x+=1;
+        }
+        // WASD
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+        {
+            players[0].y-=1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+        {
+            players[0].y+=1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+        {
+            players[0].x-=1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+        {
+            players[0].x+=1;
+        }
+        
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
         {
             bruh.play();
@@ -264,25 +260,20 @@ void Draw()
 
     if (dec == 1)
     {
-        win.draw(фреймы[0].spr);
-        win.draw(фреймы[1].spr);
-        win.draw(фреймы[2].spr);
-        win.draw(фреймы[3].spr);
-        win.draw(фреймы[4].spr);
-        win.draw(фреймы[5].spr);
-        win.draw(фреймы[6].spr);
+        win.draw(frames[0].spr);
+        win.draw(frames[1].spr);
+        win.draw(frames[2].spr);
+        win.draw(frames[3].spr);
+        win.draw(frames[4].spr);
+        win.draw(frames[5].spr);
+        win.draw(frames[6].spr);
         win.draw(chose);
     }
     else
     {
         if (aaa == true) { float xxxx = oldx; float yyyy = oldy; bul.setPosition(xxxx, yyyy); win.draw(bul); }
         
-        int plsz = players.size();
-        /*for (int j=0; j<plsz-1; plsz++)
-        {
-            players[j].spr.setPosition (players[j].x, players[j].y);
-            win.draw(players[j].spr);
-        }*/
+        // int plsz = players.size();
         
         if (players[0].ded != true)
         {
@@ -301,56 +292,56 @@ void Draw()
 }
 void load()
 {
-    фреймы.resize(7);
+    frames.resize(7);
     
-    фреймы[0].name = "batman";
-    фреймы[1].name = "Batmanframe";
-    фреймы[2].name = "cat";
-    фреймы[3].name = "harlamov";
-    фреймы[4].name = "black";
-    фреймы[5].name = "sans";
-    фреймы[6].name = "warframe";
+    frames[0].name = "batman";
+    frames[1].name = "Batmanframe";
+    frames[2].name = "cat";
+    frames[3].name = "harlamov";
+    frames[4].name = "black";
+    frames[5].name = "sans";
+    frames[6].name = "warframe";
     
-    фреймы[0].tex.loadFromFile("batman.png");
-    фреймы[1].tex.loadFromFile("batmanframe.png");
-    фреймы[2].tex.loadFromFile("cat.png");
-    фреймы[3].tex.loadFromFile("incontrol.gif");
-    фреймы[4].tex.loadFromFile("obama.jpg");
-    фреймы[5].tex.loadFromFile("sans.jpg");
-    фреймы[6].tex.loadFromFile("ploy.png");
+    frames[0].tex.loadFromFile("batman.png");
+    frames[1].tex.loadFromFile("batmanframe.png");
+    frames[2].tex.loadFromFile("cat.png");
+    frames[3].tex.loadFromFile("incontrol.gif");
+    frames[4].tex.loadFromFile("obama.jpg");
+    frames[5].tex.loadFromFile("sans.jpg");
+    frames[6].tex.loadFromFile("ploy.png");
     
-    фреймы[0].spr.setTexture(&фреймы[0].tex);
-    фреймы[1].spr.setTexture(&фреймы[1].tex);
-    фреймы[2].spr.setTexture(&фреймы[2].tex);
-    фреймы[3].spr.setTexture(&фреймы[3].tex);
-    фреймы[4].spr.setTexture(&фреймы[4].tex);
-    фреймы[5].spr.setTexture(&фреймы[5].tex);
-    фреймы[6].spr.setTexture(&фреймы[6].tex);
+    frames[0].spr.setTexture(&frames[0].tex);
+    frames[1].spr.setTexture(&frames[1].tex);
+    frames[2].spr.setTexture(&frames[2].tex);
+    frames[3].spr.setTexture(&frames[3].tex);
+    frames[4].spr.setTexture(&frames[4].tex);
+    frames[5].spr.setTexture(&frames[5].tex);
+    frames[6].spr.setTexture(&frames[6].tex);
     
-    фреймы[0].spr.setSize(sf::Vector2f(100, 300));
-    фреймы[1].spr.setSize(sf::Vector2f(100, 300));
-    фреймы[2].spr.setSize(sf::Vector2f(100, 300));
-    фреймы[3].spr.setSize(sf::Vector2f(100, 300));
-    фреймы[4].spr.setSize(sf::Vector2f(100, 300));
-    фреймы[5].spr.setSize(sf::Vector2f(100, 300));
-    фреймы[6].spr.setSize(sf::Vector2f(100, 300));
+    frames[0].spr.setSize(sf::Vector2f(100, 300));
+    frames[1].spr.setSize(sf::Vector2f(100, 300));
+    frames[2].spr.setSize(sf::Vector2f(100, 300));
+    frames[3].spr.setSize(sf::Vector2f(100, 300));
+    frames[4].spr.setSize(sf::Vector2f(100, 300));
+    frames[5].spr.setSize(sf::Vector2f(100, 300));
+    frames[6].spr.setSize(sf::Vector2f(100, 300));
     
     
     int yy = 0;
     
-    фреймы[0].spr.setPosition(yy, 100);
+    frames[0].spr.setPosition(yy, 100);
     yy = yy+200;
-    фреймы[1].spr.setPosition(yy, 100);
+    frames[1].spr.setPosition(yy, 100);
     yy = yy+200;
-    фреймы[2].spr.setPosition(yy, 100);
+    frames[2].spr.setPosition(yy, 100);
     yy = yy+200;
-    фреймы[3].spr.setPosition(yy, 100);
+    frames[3].spr.setPosition(yy, 100);
     yy = yy+200;
-    фреймы[4].spr.setPosition(yy, 100);
+    frames[4].spr.setPosition(yy, 100);
     yy = yy+200;
-    фреймы[5].spr.setPosition(yy, 100);
+    frames[5].spr.setPosition(yy, 100);
     yy = yy+200;
-    фреймы[6].spr.setPosition(yy, 100);
+    frames[6].spr.setPosition(yy, 100);
     yy = yy+200;
     
     sans.loadFromFile("sans.ttf");
@@ -369,26 +360,40 @@ void load()
     
     bul.setFillColor(sf::Color(0, 0, 0));
     bul.setRadius(5);
+    
+    sc_width = sf::VideoMode::getDesktopMode().width;
+    sc_height = sf::VideoMode::getDesktopMode().height;
+    
+    if (!bruhs.loadFromFile("bruh.wav"))
+    {
+        std::cout << "BRUH\n";
+    }
+    else
+    {
+        bruh.setBuffer(bruhs);
+    }
 }
 
 int main()
 {
-	load();
-	win.create (sf::VideoMode(1280, 720), "Warframe: Battle Royael", sf::Style::Close);
+    load();
+    win.create (sf::VideoMode(1280, 720), "Warframe: Battle Royael", sf::Style::Close);
+    win.setPosition (sf::Vector2i ( sc_width/2 - win_width/2 , sc_height/2 - win_height/2 ));
+    win.setFramerateLimit(350);
 
-	while (win.isOpen())
-	{
-		sf::Event event;
-		while (win.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed) { win.close(); }
-		}
+    while (win.isOpen())
+    {
+        sf::Event event;
+        while (win.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed) { win.close(); }
+        }
 
-		Controls();
-		Logic();
-		Draw();
+        Controls();
+        Logic();
+        Draw();
         
-	}
+    }
 
-	return 0;
+    return EXIT_SUCCESS;
 }
