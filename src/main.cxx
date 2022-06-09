@@ -24,10 +24,12 @@
 #include <main.hxx>
 #include <window.hxx>
 #include <state.hxx>
+#include <chandler/chandler.hxx>
+cHandler cH;
 
 const std::string WBR_NAME = "WarframeBattleRoyael";
 const std::string WBR_RELEASE = "New-Devel";
-const std::string WBR_BUILD = "0";
+const std::string WBR_BUILD = "1";
 
 int main()
 {
@@ -38,6 +40,7 @@ int main()
 	}
 	else
 	{
+		cHandlerSetup (&cH);
 		win_running = true;
 		sf::Clock clock;
 		while (win_running)
@@ -69,7 +72,7 @@ int main()
 					win_msc -= e.mouseWheel.delta;
 				}
 			}
-			//cHandler();
+			cH.refresh();
 			//sHandler();
 			if ( clock.getElapsedTime().asMilliseconds() >= (1000.f/state[curState].engineFPS) )
 			{
